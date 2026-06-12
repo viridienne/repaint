@@ -104,14 +104,22 @@
 
           <!-- Game Color Library -->
           <div class="panel-section">
-            <div class="panel-header">GAME COLOR LIBRARY</div>
+            <div class="panel-header">
+              GAME COLOR LIBRARY
+              <div class="library-actions">
+                <button id="library-import-btn" class="btn-library" data-tooltip="Import library JSON">IMPORT</button>
+                <button id="library-save-btn" class="btn-library" data-tooltip="Save library JSON" disabled>SAVE</button>
+                <button id="library-add-btn" class="btn-library" data-tooltip="Add color">+ ADD</button>
+              </div>
+            </div>
             <div id="game-color-library" class="game-color-library">
               <div class="library-empty">
                 <span class="library-empty-icon">◈</span>
-                <span>No color library loaded.</span>
-                <span class="library-hint">Add palette to enable.</span>
+                <span>No colors in library.</span>
+                <span class="library-hint">Click + ADD to begin.</span>
               </div>
             </div>
+            <input type="file" id="library-file-input" accept=".json" hidden />
           </div>
         </div>
       </div>
@@ -173,6 +181,21 @@
         <div class="dialog-footer">
           <button class="btn-dialog-cancel" id="resize-cancel">CANCEL</button>
           <button class="btn-dialog-confirm" id="resize-confirm">APPLY</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Library Name Dialog -->
+    <div id="library-name-dialog" class="dialog-overlay hidden">
+      <div class="dialog">
+        <div class="dialog-header">NAME THIS COLOR</div>
+        <div class="dialog-body">
+          <div id="library-name-preview" class="library-name-preview"></div>
+          <input type="text" id="library-name-input" placeholder="Color name..." maxlength="32" />
+        </div>
+        <div class="dialog-footer">
+          <button class="btn-dialog-cancel" id="library-name-cancel">CANCEL</button>
+          <button class="btn-dialog-confirm" id="library-name-confirm">ADD</button>
         </div>
       </div>
     </div>

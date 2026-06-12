@@ -175,3 +175,62 @@
   letter-spacing: 0.1em;
   text-align: center;
 }
+
+/* Presets */
+.cp-presets {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-dim);
+}
+
+.cp-presets-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.cp-presets-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 4px;
+  max-height: 80px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--bg-active) transparent;
+}
+
+.cp-presets-grid::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.cp-presets-grid::-webkit-scrollbar-thumb {
+  background: var(--bg-active);
+  border-radius: 2px;
+}
+
+.cp-preset-swatch {
+  width: 26px;
+  height: 26px;
+  border-radius: 2px;
+  border: 1px solid var(--border-soft);
+  cursor: pointer;
+  transition: transform 0.1s, border-color 0.1s;
+}
+
+.cp-preset-swatch:hover {
+  transform: scale(1.1);
+  border-color: var(--accent);
+  z-index: 1;
+}
+
+.cp-presets-empty {
+  font-size: 10px;
+  color: var(--text-dim);
+  text-align: center;
+  padding: 8px 0;
+  opacity: 0.6;
+}

@@ -28,6 +28,12 @@ export interface ViewportState {
   panY: number
 }
 
+export interface LibraryColor {
+  id: string
+  name: string
+  hex: string
+}
+
 export interface AppStateData {
   activeTool: ToolType
   activeColor: RGBA
@@ -45,3 +51,4 @@ export type AppEventType =
   | 'history:change'
   | 'selection:change'
   | 'viewport:change'
+  | 'library:change'

@@ -18,11 +18,13 @@ import { StatusBar } from './ui/StatusBar'
 import { BrushPreview } from './ui/BrushPreview'
 import { ActiveColorDisplay } from './ui/ActiveColorDisplay'
 import { ColorListPanel } from './ui/ColorListPanel'
+import { GameColorLibrary } from './ui/GameColorLibrary'
 import { ResizeDialog } from './ui/ResizeDialog'
 import { loadImageFromFile } from './io/FileLoader'
 import { exportToPng } from './io/FileExporter'
 import { analyzeColors } from './color/ColorAnalytics'
 import { showToast } from './ui/Toast'
+import { getColorPicker } from './ui/ColorPickerPopup'
 
 // --- Bootstrap ---
 
@@ -39,11 +41,15 @@ const engine = new CanvasEngine(displayCanvas, viewport, selection)
 const toolCtx = { engine, viewport, appState, undoManager, selection }
 const toolManager = new ToolManager(toolCtx)
 
+// Initialize color picker with appState for library presets
+getColorPicker().init(appState)
+
 new Toolbar(appState)
 const statusBar = new StatusBar(appState, engine)
 const brushPreview = new BrushPreview(appState, viewport, displayCanvas)
 new ActiveColorDisplay(appState)
 const colorList = new ColorListPanel(appState, engine, undoManager, selection, updateAnalytics)
+new GameColorLibrary(appState, engine, undoManager, selection, updateAnalytics)
 const resizeDialog = new ResizeDialog(engine, undoManager)
 
 let currentFilename = 'image'

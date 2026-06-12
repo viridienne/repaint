@@ -22,6 +22,10 @@ export class ColorListPanel {
     this.listEl = document.getElementById('color-list')!
     this.countEl = document.getElementById('color-count')!
     this.onAnalyticsChange = onAnalyticsChange
+
+    this.appState.on('library:change', () => {
+      this.onAnalyticsChange?.()
+    })
   }
 
   update(result: ColorAnalysisResult): void {
@@ -29,6 +33,8 @@ export class ColorListPanel {
 
     this.countEl.textContent = `${colors.length} colors`
     this.listEl.innerHTML = ''
+
+    const libraryHexSet = new Set(this.appState.library.map(c => c.hex.toUpperCase()))
 
     for (const entry of colors) {
       const row = document.createElement('div')
@@ -38,9 +44,12 @@ export class ColorListPanel {
       swatchEl.className = 'color-swatch color-swatch-editable'
       swatchEl.style.background = rgbaCssColor(entry.rgba)
 
+      const inLibrary = libraryHexSet.size === 0 || libraryHexSet.has(entry.hex.toUpperCase())
+      const badge = !inLibrary ? '<span class="out-of-palette" title="Not in library"></span>' : ''
+
       row.appendChild(swatchEl)
       row.insertAdjacentHTML('beforeend', `
-        <span class="color-row-hex">${entry.hex}</span>
+        <span class="color-row-hex">${entry.hex}${badge}</span>
         <span class="color-row-pct">${entry.percentage.toFixed(1)}%</span>
         <span class="color-row-count">${entry.count}px</span>
       `)

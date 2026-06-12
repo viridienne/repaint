@@ -1,4 +1,5 @@
 import type { RGBA } from '../types'
+import type { AppState } from '../state/AppState'
 import { hexToRgba } from '../color/ColorUtils'
 
 const SPEC_W = 252
@@ -57,9 +58,11 @@ export class ColorPickerPopup {
   private readonly gInput: HTMLInputElement
   private readonly bInput: HTMLInputElement
   private readonly previewSwatch: HTMLElement
+  private readonly presetsGrid: HTMLElement
 
   private h = 0; private s = 1; private v = 1
   private alpha = 255
+  private appState: AppState | null = null
   private onInput: ((c: RGBA) => void) | null = null
   private onClose: (() => void) | null = null
   private skipSync = false
@@ -90,6 +93,10 @@ export class ColorPickerPopup {
           <div class="cp-rgb-field"><input class="cp-num-input" type="number" min="0" max="255"><span class="cp-field-label">B</span></div>
         </div>
       </div>
+      <div class="cp-presets">
+        <div class="cp-presets-label">LIBRARY</div>
+        <div class="cp-presets-grid"></div>
+      </div>
     `
     document.body.appendChild(this.popup)
 
@@ -101,6 +108,7 @@ export class ColorPickerPopup {
     this.hueCursor = this.popup.querySelector('.cp-hue-cursor')!
     this.hexInput = this.popup.querySelector('.cp-hex-input')!
     this.previewSwatch = this.popup.querySelector('.cp-preview-swatch')!
+    this.presetsGrid = this.popup.querySelector('.cp-presets-grid')!
     const numInputs = this.popup.querySelectorAll<HTMLInputElement>('.cp-num-input')
     this.rInput = numInputs[0]
     this.gInput = numInputs[1]
@@ -160,6 +168,43 @@ export class ColorPickerPopup {
     this.onClose?.()
     this.onClose = null
     this.onInput = null
+  }
+
+  init(appState: AppState): void {
+    this.appState = appState
+    this.appState.on('library:change', () => this.renderPresets())
+    this.renderPresets()
+  }
+
+  private renderPresets(): void {
+    if (!this.appState) return
+
+    const library = this.appState.library
+    this.presetsGrid.innerHTML = ''
+
+    if (library.length === 0) {
+      this.presetsGrid.innerHTML = '<div class="cp-presets-empty">No colors in library</div>'
+      return
+    }
+
+    library.forEach(color => {
+      const swatch = document.createElement('div')
+      swatch.className = 'cp-preset-swatch'
+      swatch.style.backgroundColor = color.hex
+      swatch.title = color.name
+      swatch.addEventListener('click', () => {
+        const rgba = hexToRgba(color.hex)
+        const { h, s, v } = rgbToHsv(rgba.r, rgba.g, rgba.b)
+        this.h = h
+        this.s = s
+        this.v = v
+        this.drawSpectrum()
+        this.syncCursors()
+        this.syncInputs()
+        this.emit()
+      })
+      this.presetsGrid.appendChild(swatch)
+    })
   }
 
   private position(anchor: HTMLElement): void {
