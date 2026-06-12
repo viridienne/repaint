@@ -1,4 +1,4 @@
-type ToastLevel = 'info' | 'warning' | 'error'
+type ToastLevel = 'info' | 'warning' | 'error' | 'success'
 
 let container: HTMLElement | null = null
 

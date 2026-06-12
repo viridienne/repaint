@@ -16,7 +16,14 @@ A browser-based tool for editing and recoloring pixel art sprites.
 - **Rectangular Selection** — right-click drag to select area; click color to fill
 - **Flood Fill** — bucket fill connected region
 - **Color palette** — live list of all colors in artwork with pixel counts; X button deletes color
-- **Game Color Library** — load a palette file to snap colors to a target set
+- **Game Color Library** — build and manage a named color palette
+  - **+ ADD** — add colors via HSV picker with custom names
+  - **SAVE/IMPORT** — export/import library as JSON
+  - **Click swatch** — set as active color; fills selection if active
+  - **Right-click swatch** — edit color using picker
+  - **Out-of-palette warnings** — artwork colors not in library show ⚠ badge
+  - **Picker presets** — library colors appear as quick-pick presets in color picker popup
+  - **localStorage** — library persists across sessions
 - **Resize** — resize canvas with presets (8×8 up to 128×128) or custom dimensions, with aspect ratio lock
 - **Undo / Redo** — full history (Ctrl+Z / Ctrl+Y)
 - **Export PNG** — save result
