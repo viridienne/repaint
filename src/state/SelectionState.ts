@@ -18,7 +18,9 @@ export class SelectionState {
   }
 
   has(x: number, y: number): boolean {
-    return this._pixels.has(y * this._width + x)
+    const ix = Math.floor(x)
+    const iy = Math.floor(y)
+    return this._pixels.has(iy * this._width + ix)
   }
 
   get pixels(): Set<number> { return this._pixels }

@@ -43,7 +43,7 @@ new Toolbar(appState)
 const statusBar = new StatusBar(appState, engine)
 const brushPreview = new BrushPreview(appState, viewport, displayCanvas)
 new ActiveColorDisplay(appState)
-const colorList = new ColorListPanel(appState, engine, undoManager, updateAnalytics)
+const colorList = new ColorListPanel(appState, engine, undoManager, selection, updateAnalytics)
 const resizeDialog = new ResizeDialog(engine, undoManager)
 
 let currentFilename = 'image'
@@ -154,6 +154,10 @@ let isPanning = false
 let lastPanX = 0
 let lastPanY = 0
 let isSpaceDown = false
+let isRectSelecting = false
+let rectStartScreen = { x: 0, y: 0 }
+
+displayCanvas.addEventListener('contextmenu', e => e.preventDefault())
 
 displayCanvas.addEventListener('pointerdown', (e) => {
   displayCanvas.setPointerCapture(e.pointerId)
@@ -168,6 +172,12 @@ displayCanvas.addEventListener('pointerdown', (e) => {
   if (e.button === 0 && engine.hasImage) {
     const rect = displayCanvas.getBoundingClientRect()
     toolManager.onPointerDown(e.clientX - rect.left, e.clientY - rect.top)
+  }
+
+  else if (e.button === 2 && engine.hasImage) {
+    isRectSelecting = true
+    const r = displayCanvas.getBoundingClientRect()
+    rectStartScreen = { x: e.clientX - r.left, y: e.clientY - r.top }
   }
 })
 
@@ -184,6 +194,13 @@ displayCanvas.addEventListener('pointermove', (e) => {
     return
   }
 
+  if (isRectSelecting) {
+    const r = displayCanvas.getBoundingClientRect()
+    const ex = e.clientX - r.left, ey = e.clientY - r.top
+    engine.setSelectionRect(rectStartScreen.x, rectStartScreen.y, ex, ey)
+    return
+  }
+
   if (engine.hasImage) {
     const { x, y } = viewport.screenToImage(sx, sy)
     statusBar.setCursorPos(x, y)
@@ -196,6 +213,27 @@ displayCanvas.addEventListener('pointerup', (e) => {
     isPanning = false
     return
   }
+
+  if (e.button === 2 && isRectSelecting) {
+    isRectSelecting = false
+    engine.clearSelectionRect()
+    const r = displayCanvas.getBoundingClientRect()
+    const ex = e.clientX - r.left, ey = e.clientY - r.top
+    const p0 = viewport.screenToImage(Math.min(rectStartScreen.x, ex), Math.min(rectStartScreen.y, ey))
+    const p1 = viewport.screenToImage(Math.max(rectStartScreen.x, ex), Math.max(rectStartScreen.y, ey))
+    const x0 = Math.max(0, Math.floor(p0.x))
+    const y0 = Math.max(0, Math.floor(p0.y))
+    const x1 = Math.min(engine.width - 1, Math.floor(p1.x))
+    const y1 = Math.min(engine.height - 1, Math.floor(p1.y))
+    const pixels = new Set<number>()
+    for (let y = y0; y <= y1; y++)
+      for (let x = x0; x <= x1; x++)
+        pixels.add(y * engine.width + x)
+    if (pixels.size > 0) selection.setSelection(pixels, engine.width)
+    else selection.clear()
+    engine.render()
+  }
+
   if (e.button === 0 && engine.hasImage) {
     const rect = displayCanvas.getBoundingClientRect()
     toolManager.onPointerUp(e.clientX - rect.left, e.clientY - rect.top)
@@ -254,6 +292,7 @@ window.addEventListener('keydown', (e) => {
     case 'w': case 'W': appState.setTool('autoselect'); break
     case '[': appState.setBrushSize(appState.brushSize - 1); break
     case ']': appState.setBrushSize(appState.brushSize + 1); break
+    case 'Escape': selection.clear(); engine.render(); break
   }
 })
 

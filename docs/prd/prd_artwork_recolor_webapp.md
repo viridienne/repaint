@@ -75,11 +75,13 @@ This tool is intentionally scoped to be simpler than Photoshop. It targets pixel
 #### 3.2.1 Pencil / Repaint Tool
 * Click a pixel to paint it with the **Active Color**
 * Click-and-drag to paint continuously
-* Optional: paint all pixels of the same color (flood-fill mode toggle)
+* Brush size: 1–32px
+* When selection is active: click anywhere → fills entire selection with active color and deselects
 
 #### 3.2.2 Eraser Tool
-* Erase pixels to transparent (alpha = 0)
-* Brush size: 1px (pixel-perfect mode)
+* Erase pixels to transparent (alpha = 0) using `clearRect` API
+* Brush size: 1–32px (same range as pencil)
+* When selection is active: click anywhere → clears entire selection and deselects
 
 #### 3.2.3 Color Picker (Eyedropper)
 * Click any pixel on canvas → sets that pixel's color as the **Active Color**
@@ -89,6 +91,34 @@ This tool is intentionally scoped to be simpler than Photoshop. It targets pixel
 * Click a pixel → automatically selects and highlights all pixels sharing the exact same RGBA value
 * Provides a visual overlay (marching ants or highlight tint) on selected pixels
 * Allows the user to repaint or erase the entire selection in one action
+
+#### 3.2.5 Rectangular Selection
+* **Right-click drag** on canvas → draws a dynamic dashed cyan rectangle while dragging
+* On mouse release → commits all pixels within the rectangle to the selection (cyan overlay)
+* Selected pixels can be filled by:
+  - Clicking a color in the color list → instantly fills selection and deselects
+  - Clicking with pencil tool → fills with active color and deselects
+  - Clicking with eraser tool → clears selection and deselects
+* **Escape key** clears the active selection
+* Selection persists across tool switches until explicitly cleared or an operation is performed
+
+#### 3.2.6 Keyboard Shortcuts
+
+| Key | Action |
+|---|---|
+| `B` | Pencil tool |
+| `E` | Eraser tool |
+| `I` | Eyedropper tool |
+| `W` | Auto-select tool |
+| `[` | Decrease brush size by 1 |
+| `]` | Increase brush size by 1 |
+| `Escape` | Clear active selection |
+| `Ctrl+Z` / `Cmd+Z` | Undo |
+| `Ctrl+Y` / `Cmd+Y` | Redo |
+| `Space + drag` | Pan canvas |
+| `Middle-mouse drag` | Pan canvas |
+| `Scroll wheel` | Zoom in / out |
+| `Right-click drag` | Rectangular selection |
 
 ---
 
@@ -113,8 +143,9 @@ The side panel displays:
 | Pixel Count | Exact count of pixels for each color |
 | Transparency | Count and % of transparent (alpha = 0) pixels |
 
-* **Left-click** a color in the list → sets it as the Active Color
+* **Left-click** a color in the list → sets it as the Active Color (if selection is active, also fills the selection immediately and deselects)
 * **Right-click** a color in the list → opens the Color Picker Popup to remap all pixels of that color to a new color (one undo step per remap)
+* **X button** on each color row → deletes all pixels of that color (makes them transparent) and triggers undo snapshot
 * Colors are sorted by usage % descending by default
 * Hovering a color in the list highlights those pixels on canvas (ghost overlay)
 * Active Color swatch and hex text are both clickable → open Color Picker Popup
@@ -394,6 +425,24 @@ Behavior:
 * [x] Color map right-click remaps all pixels of that color via color picker
 * [x] Toolbar and status bar buttons show tooltips on hover
 * [x] Button tooltips use CSS `data-tooltip` pseudo-element (no JS)
+* [x] Keyboard shortcuts: B/E/I/W for tools, `[`/`]` for brush size, Ctrl+Z/Y for undo/redo
+* [x] Canvas pan via middle-mouse drag or spacebar + drag
+* [x] Zoom via scroll wheel (zooms toward cursor position)
+* [x] Color hover highlight — mousing over color list row highlights matching pixels on canvas
+* [x] Drag & drop PNG load
+* [x] Pixel grid overlay at high zoom levels
+* [x] Checkerboard background for transparency visualization
+* [x] Brush preview cursor overlay
+* [x] Selection overlay (cyan tint) for auto-select tool
+* [x] Toast notifications for undo empty, export, resize confirmation
+* [x] Rectangular selection via right-click drag (cyan dashed rectangle while dragging)
+* [x] Selection fill: clicking a color in the list fills active selection immediately
+* [x] Selection fill: pencil tool click fills entire selection with active color
+* [x] Selection clear: eraser tool click clears entire selection
+* [x] Escape key clears active selection
+* [x] X button on each color row deletes all pixels of that color (makes transparent)
+* [x] Auto-deselect after fill/clear operations
+* [x] Eraser tool uses clearRect API for proper transparency handling
 
 ---
 

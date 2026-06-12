@@ -9,6 +9,7 @@ export class CanvasEngine {
   private displayCtx: CanvasRenderingContext2D
 
   private hoverColor: RGBA | null = null
+  private selectionRect: { x0: number; y0: number; x1: number; y1: number } | null = null
 
   constructor(
     private displayCanvas: HTMLCanvasElement,
@@ -75,6 +76,23 @@ export class CanvasEngine {
     this.offCtx.fillRect(x0, y0, w, h)
   }
 
+  clearPixel(x: number, y: number): void {
+    if (!this.offCtx || !this.offscreen) return
+    if (x < 0 || y < 0 || x >= this.offscreen.width || y >= this.offscreen.height) return
+    this.offCtx.clearRect(x, y, 1, 1)
+  }
+
+  clearBlock(cx: number, cy: number, brushSize: number): void {
+    if (!this.offCtx || !this.offscreen) return
+    const half = Math.floor(brushSize / 2)
+    const x0 = Math.max(0, cx - half)
+    const y0 = Math.max(0, cy - half)
+    const x1 = Math.min(this.offscreen.width - 1, cx - half + brushSize - 1)
+    const y1 = Math.min(this.offscreen.height - 1, cy - half + brushSize - 1)
+    if (x1 < x0 || y1 < y0) return
+    this.offCtx.clearRect(x0, y0, x1 - x0 + 1, y1 - y0 + 1)
+  }
+
   replaceColor(oldColor: RGBA, newColor: RGBA): void {
     if (!this.offCtx || !this.offscreen) return
     const imageData = this.offCtx.getImageData(0, 0, this.offscreen.width, this.offscreen.height)
@@ -91,8 +109,31 @@ export class CanvasEngine {
     this.render()
   }
 
+  deleteColor(color: RGBA): void {
+    if (!this.offCtx || !this.offscreen) return
+    const imageData = this.offCtx.getImageData(0, 0, this.offscreen.width, this.offscreen.height)
+    const data = imageData.data
+    for (let i = 0; i < data.length; i += 4) {
+      if (data[i] === color.r && data[i + 1] === color.g && data[i + 2] === color.b && data[i + 3] === color.a) {
+        data[i + 3] = 0  // make transparent
+      }
+    }
+    this.offCtx.putImageData(imageData, 0, 0)
+    this.render()
+  }
+
   setHoverColor(color: RGBA | null): void {
     this.hoverColor = color
+    this.render()
+  }
+
+  setSelectionRect(x0: number, y0: number, x1: number, y1: number): void {
+    this.selectionRect = { x0, y0, x1, y1 }
+    this.render()
+  }
+
+  clearSelectionRect(): void {
+    this.selectionRect = null
     this.render()
   }
 
@@ -130,6 +171,11 @@ export class CanvasEngine {
     // Hover highlight
     if (this.hoverColor) {
       this.drawHoverOverlay(panX, panY, iw, ih, zoom, this.hoverColor)
+    }
+
+    // Selection rectangle (during drag)
+    if (this.selectionRect) {
+      this.drawSelectionRect(this.selectionRect)
     }
   }
 
@@ -212,6 +258,21 @@ export class CanvasEngine {
         }
       }
     }
+    ctx.restore()
+  }
+
+  private drawSelectionRect(r: { x0: number; y0: number; x1: number; y1: number }): void {
+    const ctx = this.displayCtx
+    const x = Math.min(r.x0, r.x1), y = Math.min(r.y0, r.y1)
+    const w = Math.abs(r.x1 - r.x0), h = Math.abs(r.y1 - r.y0)
+    ctx.save()
+    ctx.strokeStyle = 'rgba(0, 220, 255, 0.9)'
+    ctx.lineWidth = 1
+    ctx.setLineDash([4, 4])
+    ctx.strokeRect(x + 0.5, y + 0.5, w, h)
+    ctx.strokeStyle = 'rgba(255,255,255,0.5)'
+    ctx.lineDashOffset = 4
+    ctx.strokeRect(x + 0.5, y + 0.5, w, h)
     ctx.restore()
   }
 

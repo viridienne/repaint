@@ -1,6 +1,7 @@
 import type { AppState } from '../state/AppState'
 import type { CanvasEngine } from '../canvas/CanvasEngine'
 import type { UndoManager } from '../state/UndoManager'
+import type { SelectionState } from '../state/SelectionState'
 import type { ColorAnalysisResult } from '../types'
 import type { RGBA } from '../types'
 import { rgbaCssColor } from '../color/ColorUtils'
@@ -15,6 +16,7 @@ export class ColorListPanel {
     private appState: AppState,
     private engine: CanvasEngine,
     private undoManager: UndoManager,
+    private selection: SelectionState,
     onAnalyticsChange: () => void,
   ) {
     this.listEl = document.getElementById('color-list')!
@@ -43,16 +45,36 @@ export class ColorListPanel {
         <span class="color-row-count">${entry.count}px</span>
       `)
 
+      const removeBtn = document.createElement('button')
+      removeBtn.className = 'color-row-remove'
+      removeBtn.textContent = '×'
+      removeBtn.title = 'Remove this color (make transparent)'
+      removeBtn.addEventListener('click', (e) => {
+        e.stopPropagation()
+        this.undoManager.push(this.engine.getImageData())
+        this.engine.deleteColor(entry.rgba)
+        this.onAnalyticsChange?.()
+      })
+      row.appendChild(removeBtn)
+
       row.addEventListener('click', () => {
         this.appState.setColor(entry.rgba)
+
+        if (this.selection.size > 0) {
+          this.undoManager.push(this.engine.getImageData())
+          this.fillSelection(entry.rgba)
+          this.onAnalyticsChange?.()
+        }
       })
 
       row.addEventListener('contextmenu', (e) => {
         e.preventDefault()
         let snapshot: ImageData | null = null
+        let currentColor = entry.rgba
         getColorPicker().show(swatchEl, entry.rgba, (newColor: RGBA) => {
           if (!snapshot) snapshot = this.engine.getImageData()
-          this.engine.replaceColor(entry.rgba, newColor)
+          this.engine.replaceColor(currentColor, newColor)
+          currentColor = newColor
           swatchEl.style.background = rgbaCssColor(newColor)
         }, () => {
           if (snapshot) {
@@ -93,5 +115,15 @@ export class ColorListPanel {
   clear(): void {
     this.countEl.textContent = '—'
     this.listEl.innerHTML = '<div class="color-list-empty">Load an image to see color stats</div>'
+  }
+
+  private fillSelection(color: RGBA): void {
+    for (const idx of this.selection.pixels) {
+      const x = idx % this.selection.width
+      const y = Math.floor(idx / this.selection.width)
+      this.engine.setPixel(x, y, color)
+    }
+    this.selection.clear()
+    this.engine.render()
   }
 }

@@ -1,8 +1,6 @@
 import { BaseTool } from './BaseTool'
 import type { ToolContext } from './BaseTool'
 
-const TRANSPARENT = { r: 0, g: 0, b: 0, a: 0 }
-
 export class EraserTool extends BaseTool {
   private drawing = false
   private prevX = -1
@@ -17,12 +15,19 @@ export class EraserTool extends BaseTool {
     this.prevX = ix
     this.prevY = iy
     this.ctx.undoManager.push(this.ctx.engine.getImageData())
-    this.erase(ix, iy)
+
+    if (this.ctx.selection.size > 0) {
+      this.clearSelection()
+    } else {
+      this.erase(ix, iy)
+    }
+
     this.ctx.engine.render()
   }
 
   onPointerMove(ix: number, iy: number): void {
     if (!this.drawing) return
+    if (this.ctx.selection.size > 0) return
     this.bresenham(this.prevX, this.prevY, ix, iy)
     this.prevX = ix
     this.prevY = iy
@@ -37,7 +42,16 @@ export class EraserTool extends BaseTool {
 
   private erase(x: number, y: number): void {
     const size = this.ctx.appState.brushSize
-    this.ctx.engine.paintBlock(x, y, size, TRANSPARENT)
+    this.ctx.engine.clearBlock(x, y, size)
+  }
+
+  private clearSelection(): void {
+    for (const idx of this.ctx.selection.pixels) {
+      const x = idx % this.ctx.selection.width
+      const y = Math.floor(idx / this.ctx.selection.width)
+      this.ctx.engine.clearPixel(x, y)
+    }
+    this.ctx.selection.clear()
   }
 
   private bresenham(x0: number, y0: number, x1: number, y1: number): void {

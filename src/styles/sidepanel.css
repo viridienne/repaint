@@ -109,7 +109,7 @@
 
 .color-row {
   display: grid;
-  grid-template-columns: 18px 1fr auto auto;
+  grid-template-columns: 18px 1fr auto auto auto;
   align-items: center;
   gap: 8px;
   padding: 6px 4px;
@@ -167,6 +167,28 @@
   color: var(--text-dim);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
+}
+
+.color-row-remove {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0.4;
+  transition: opacity 0.1s, color 0.1s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.color-row-remove:hover {
+  opacity: 1;
+  color: #e94560;
 }
 
 /* Game color library */

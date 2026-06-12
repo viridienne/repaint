@@ -15,12 +15,19 @@ export class PencilTool extends BaseTool {
     this.prevX = ix
     this.prevY = iy
     this.ctx.undoManager.push(this.ctx.engine.getImageData())
-    this.paint(ix, iy)
+
+    if (this.ctx.selection.size > 0) {
+      this.fillSelection()
+    } else {
+      this.paint(ix, iy)
+    }
+
     this.ctx.engine.render()
   }
 
   onPointerMove(ix: number, iy: number): void {
     if (!this.drawing) return
+    if (this.ctx.selection.size > 0) return
     this.bresenham(this.prevX, this.prevY, ix, iy)
     this.prevX = ix
     this.prevY = iy
@@ -37,6 +44,16 @@ export class PencilTool extends BaseTool {
     const color = this.ctx.appState.activeColor
     const size = this.ctx.appState.brushSize
     this.ctx.engine.paintBlock(x, y, size, color)
+  }
+
+  private fillSelection(): void {
+    const color = this.ctx.appState.activeColor
+    for (const idx of this.ctx.selection.pixels) {
+      const x = idx % this.ctx.selection.width
+      const y = Math.floor(idx / this.ctx.selection.width)
+      this.ctx.engine.setPixel(x, y, color)
+    }
+    this.ctx.selection.clear()
   }
 
   private bresenham(x0: number, y0: number, x1: number, y1: number): void {
