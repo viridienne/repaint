@@ -5,6 +5,7 @@ import './styles/toolbar.css'
 import './styles/sidepanel.css'
 import './styles/dialog.css'
 import './styles/canvas.css'
+import './styles/colorpicker.css'
 
 import { AppState } from './state/AppState'
 import { UndoManager } from './state/UndoManager'
@@ -42,7 +43,7 @@ new Toolbar(appState)
 const statusBar = new StatusBar(appState, engine)
 const brushPreview = new BrushPreview(appState, viewport, displayCanvas)
 new ActiveColorDisplay(appState)
-const colorList = new ColorListPanel(appState, engine)
+const colorList = new ColorListPanel(appState, engine, undoManager, updateAnalytics)
 const resizeDialog = new ResizeDialog(engine, undoManager)
 
 let currentFilename = 'image'

@@ -75,6 +75,22 @@ export class CanvasEngine {
     this.offCtx.fillRect(x0, y0, w, h)
   }
 
+  replaceColor(oldColor: RGBA, newColor: RGBA): void {
+    if (!this.offCtx || !this.offscreen) return
+    const imageData = this.offCtx.getImageData(0, 0, this.offscreen.width, this.offscreen.height)
+    const data = imageData.data
+    for (let i = 0; i < data.length; i += 4) {
+      if (data[i] === oldColor.r && data[i + 1] === oldColor.g && data[i + 2] === oldColor.b && data[i + 3] === oldColor.a) {
+        data[i] = newColor.r
+        data[i + 1] = newColor.g
+        data[i + 2] = newColor.b
+        data[i + 3] = newColor.a
+      }
+    }
+    this.offCtx.putImageData(imageData, 0, 0)
+    this.render()
+  }
+
   setHoverColor(color: RGBA | null): void {
     this.hoverColor = color
     this.render()

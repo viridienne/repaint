@@ -1,5 +1,6 @@
 import type { AppState } from '../state/AppState'
 import { rgbaToHex, rgbaCssColor } from '../color/ColorUtils'
+import { getColorPicker } from './ColorPickerPopup'
 
 export class ActiveColorDisplay {
   private swatch: HTMLElement
@@ -12,6 +13,17 @@ export class ActiveColorDisplay {
     this.hexEl = document.getElementById('active-hex')!
     this.rgbEl = document.getElementById('active-rgb')!
     this.alphaEl = document.getElementById('active-alpha')!
+
+    const openPicker = (anchor: HTMLElement) =>
+      getColorPicker().show(anchor, appState.activeColor, (c) => appState.setColor(c))
+
+    this.swatch.style.cursor = 'pointer'
+    this.swatch.addEventListener('click', () => openPicker(this.swatch))
+    this.swatch.addEventListener('contextmenu', (e) => { e.preventDefault(); openPicker(this.swatch) })
+
+    this.hexEl.style.cursor = 'pointer'
+    this.hexEl.addEventListener('click', () => openPicker(this.hexEl))
+    this.hexEl.addEventListener('contextmenu', (e) => { e.preventDefault(); openPicker(this.hexEl) })
 
     appState.on('color:change', () => this.update(appState))
     this.update(appState)

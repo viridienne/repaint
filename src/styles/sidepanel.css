@@ -12,7 +12,7 @@
 }
 
 .panel-header {
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.12em;
   color: var(--text-dim);
@@ -24,7 +24,7 @@
 }
 
 .color-count {
-  font-size: 9px;
+  font-size: 11px;
   color: var(--text-dim);
   font-weight: 400;
 }
@@ -37,8 +37,8 @@
 }
 
 .active-swatch {
-  width: 32px;
-  height: 32px;
+  width: 44px;
+  height: 44px;
   border-radius: var(--radius);
   border: 1px solid var(--border-soft);
   background: #e94560;
@@ -68,7 +68,7 @@
 }
 
 .color-hex {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--text-primary);
   letter-spacing: 0.05em;
@@ -76,7 +76,7 @@
 
 .color-rgb,
 .color-alpha {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--text-secondary);
   font-variant-numeric: tabular-nums;
 }
@@ -101,7 +101,7 @@
 
 .color-list-empty {
   color: var(--text-dim);
-  font-size: 10px;
+  font-size: 12px;
   text-align: center;
   padding: 16px 8px;
   line-height: 1.6;
@@ -109,10 +109,10 @@
 
 .color-row {
   display: grid;
-  grid-template-columns: 14px 1fr auto auto;
+  grid-template-columns: 18px 1fr auto auto;
   align-items: center;
-  gap: 6px;
-  padding: 4px 4px;
+  gap: 8px;
+  padding: 6px 4px;
   border-radius: var(--radius);
   cursor: pointer;
   transition: background 0.1s;
@@ -123,11 +123,16 @@
 }
 
 .color-swatch {
-  width: 14px;
-  height: 14px;
+  width: 18px;
+  height: 18px;
   border-radius: 1px;
   border: 1px solid var(--border-soft);
   flex-shrink: 0;
+  position: relative;
+}
+
+.color-swatch-editable {
+  cursor: context-menu;
 }
 
 .color-swatch-transparent {
@@ -142,7 +147,7 @@
 }
 
 .color-row-hex {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--text-secondary);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -151,14 +156,14 @@
 }
 
 .color-row-pct {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--accent);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 
 .color-row-count {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--text-dim);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;

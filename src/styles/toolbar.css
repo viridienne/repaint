@@ -15,7 +15,7 @@
 
 .logo-text {
   font-family: var(--font-pixel);
-  font-size: 8px;
+  font-size: 10px;
   color: var(--accent);
   letter-spacing: 0.1em;
   text-shadow: 0 0 12px var(--accent-dim);
@@ -31,8 +31,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
+  width: 38px;
+  height: 38px;
   border-radius: var(--radius);
   color: var(--text-secondary);
   background: transparent;
@@ -74,15 +74,15 @@
 }
 
 .brush-label {
-  font-size: 9px;
+  font-size: 11px;
   color: var(--text-dim);
   letter-spacing: 0.08em;
   white-space: nowrap;
 }
 
 .brush-slider {
-  width: 80px;
-  height: 4px;
+  width: 100px;
+  height: 5px;
   background: var(--bg-active);
   border-radius: 2px;
   outline: none;
@@ -91,8 +91,8 @@
 
 .brush-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 12px;
-  height: 12px;
+  width: 16px;
+  height: 16px;
   border-radius: 1px;
   background: var(--accent);
   cursor: pointer;
@@ -100,8 +100,8 @@
 }
 
 .brush-slider::-moz-range-thumb {
-  width: 12px;
-  height: 12px;
+  width: 16px;
+  height: 16px;
   border-radius: 1px;
   background: var(--accent);
   cursor: pointer;
@@ -109,7 +109,7 @@
 }
 
 .brush-value {
-  font-size: 11px;
+  font-size: 13px;
   color: var(--text-secondary);
   min-width: 20px;
   text-align: right;
@@ -117,8 +117,44 @@
 }
 
 .zoom-value {
-  font-size: 11px;
+  font-size: 13px;
   color: var(--text-secondary);
   min-width: 28px;
   font-variant-numeric: tabular-nums;
+}
+
+/* Tooltips */
+[data-tooltip] {
+  position: relative;
+}
+
+[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-raised);
+  color: var(--text-primary);
+  font-size: 11px;
+  font-family: var(--font-mono);
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  padding: 4px 8px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-soft);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.1s;
+  z-index: 1000;
+}
+
+[data-tooltip]:hover::after {
+  opacity: 1;
+}
+
+/* Toolbar tooltips drop below (toolbar is at top of viewport) */
+.toolbar [data-tooltip]::after {
+  bottom: auto;
+  top: calc(100% + 6px);
 }

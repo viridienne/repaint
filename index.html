@@ -16,27 +16,27 @@
           <span class="logo-text">REPAINT</span>
         </div>
         <div class="toolbar-tools">
-          <button class="tool-btn active" data-tool="pencil" title="Pencil (B)">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <button class="tool-btn active" data-tool="pencil" data-tooltip="Pencil (B)">
+            <svg width="20" height="20" viewBox="0 0 16 16" fill="none">
               <path d="M11 2L14 5L5 14H2V11L11 2Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
               <path d="M9 4L12 7" stroke="currentColor" stroke-width="1.5"/>
             </svg>
           </button>
-          <button class="tool-btn" data-tool="eraser" title="Eraser (E)">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <button class="tool-btn" data-tool="eraser" data-tooltip="Eraser (E)">
+            <svg width="20" height="20" viewBox="0 0 16 16" fill="none">
               <rect x="3" y="7" width="10" height="5" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/>
               <path d="M7 7L10 4L14 8L11 12" stroke="currentColor" stroke-width="1.5" fill="none"/>
             </svg>
           </button>
-          <button class="tool-btn" data-tool="eyedropper" title="Eyedropper (I)">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <button class="tool-btn" data-tool="eyedropper" data-tooltip="Eyedropper (I)">
+            <svg width="20" height="20" viewBox="0 0 16 16" fill="none">
               <path d="M10 2L14 6L6 14L2 13L3 9L10 2Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
               <path d="M8 4L12 8" stroke="currentColor" stroke-width="1.5"/>
               <circle cx="3.5" cy="12.5" r="1.5" stroke="currentColor" stroke-width="1"/>
             </svg>
           </button>
-          <button class="tool-btn" data-tool="autoselect" title="Auto Select (W)">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <button class="tool-btn" data-tool="autoselect" data-tooltip="Auto Select (W)">
+            <svg width="20" height="20" viewBox="0 0 16 16" fill="none">
               <rect x="2" y="2" width="12" height="12" rx="1" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2 2" fill="none"/>
               <path d="M6 7L8 9L12 5" stroke="currentColor" stroke-width="1.5"/>
             </svg>
@@ -119,8 +119,8 @@
       <!-- Status Bar -->
       <div id="status-bar" class="status-bar">
         <div class="status-left">
-          <button class="btn-status" id="load-btn">LOAD PNG</button>
-          <button class="btn-status" id="export-btn" disabled>EXPORT PNG</button>
+          <button class="btn-status" id="load-btn" data-tooltip="Load PNG image">LOAD PNG</button>
+          <button class="btn-status" id="export-btn" disabled data-tooltip="Export as PNG">EXPORT PNG</button>
           <input type="file" id="file-input" accept=".png,image/png" hidden />
         </div>
         <div class="status-center">
@@ -128,9 +128,9 @@
           <span class="status-info" id="cursor-pos">—</span>
         </div>
         <div class="status-right">
-          <button class="btn-status" id="undo-btn" disabled title="Ctrl+Z">UNDO</button>
-          <button class="btn-status" id="redo-btn" disabled title="Ctrl+Y">REDO</button>
-          <button class="btn-status" id="resize-btn" disabled>RESIZE</button>
+          <button class="btn-status" id="undo-btn" disabled data-tooltip="Undo (Ctrl+Z)">UNDO</button>
+          <button class="btn-status" id="redo-btn" disabled data-tooltip="Redo (Ctrl+Y)">REDO</button>
+          <button class="btn-status" id="resize-btn" disabled data-tooltip="Resize canvas">RESIZE</button>
         </div>
       </div>
     </div>

@@ -33,17 +33,17 @@
   --font-pixel: 'Press Start 2P', monospace;
 
   /* Sizing */
-  --toolbar-h: 44px;
-  --statusbar-h: 36px;
-  --panel-w: 220px;
-  --radius: 2px;
+  --toolbar-h: 56px;
+  --statusbar-h: 44px;
+  --panel-w: 280px;
+  --radius: 3px;
 }
 
 body {
   background: var(--bg-deepest);
   color: var(--text-primary);
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.4;
   -webkit-font-smoothing: antialiased;
 }

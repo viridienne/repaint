@@ -1,0 +1,177 @@
+.cp-popup {
+  position: fixed;
+  z-index: 2000;
+  background: var(--bg-raised);
+  border: 1px solid var(--border-soft);
+  border-radius: 4px;
+  padding: 12px;
+  width: 276px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+  user-select: none;
+}
+
+.cp-popup.hidden {
+  display: none;
+}
+
+/* Spectrum */
+.cp-spectrum-wrap {
+  position: relative;
+  width: 252px;
+  height: 180px;
+  border-radius: 2px;
+  overflow: hidden;
+  cursor: crosshair;
+  margin-bottom: 10px;
+}
+
+.cp-spectrum {
+  display: block;
+  width: 252px;
+  height: 180px;
+  border-radius: 2px;
+}
+
+.cp-spec-cursor {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.5);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+/* Hue bar */
+.cp-hue-wrap {
+  position: relative;
+  width: 252px;
+  height: 14px;
+  margin-bottom: 12px;
+  cursor: pointer;
+}
+
+.cp-hue {
+  display: block;
+  width: 252px;
+  height: 14px;
+  border-radius: 7px;
+}
+
+.cp-hue-cursor {
+  position: absolute;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.5);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  background: transparent;
+}
+
+/* Inputs */
+.cp-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cp-hex-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cp-preview-swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 2px;
+  border: 1px solid var(--border-soft);
+  flex-shrink: 0;
+}
+
+.cp-hex-input {
+  flex: 1;
+  background: var(--bg-active);
+  border: 1px solid var(--border-dim);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 4px 8px;
+  border-radius: var(--radius);
+  outline: none;
+  text-transform: uppercase;
+}
+
+.cp-hex-input:focus {
+  border-color: var(--accent);
+}
+
+.cp-copy-btn {
+  background: var(--bg-active);
+  border: 1px solid var(--border-dim);
+  color: var(--text-secondary);
+  font-size: 14px;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: color 0.1s, border-color 0.1s;
+}
+
+.cp-copy-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--border-soft);
+}
+
+.cp-rgb-row {
+  display: flex;
+  gap: 4px;
+}
+
+.cp-rgb-field {
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cp-num-input {
+  width: 100%;
+  background: var(--bg-active);
+  border: 1px solid var(--border-dim);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  padding: 4px 4px;
+  border-radius: var(--radius);
+  outline: none;
+  text-align: center;
+  -moz-appearance: textfield;
+}
+
+.cp-num-input::-webkit-outer-spin-button,
+.cp-num-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.cp-num-input:focus {
+  border-color: var(--accent);
+}
+
+.cp-field-label {
+  font-size: 10px;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+  text-align: center;
+}

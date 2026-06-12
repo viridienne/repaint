@@ -1,7 +1,7 @@
 # PRD: Artwork Recolor Web App
 ### Project: Jewel Music Color — Internal Art Tool
-**Version:** 1.0.0  
-**Status:** Draft  
+**Version:** 1.1.0  
+**Status:** Active  
 **Author:** Anh Tang Hoang  
 **Date:** 2026-06-12
 
@@ -113,9 +113,37 @@ The side panel displays:
 | Pixel Count | Exact count of pixels for each color |
 | Transparency | Count and % of transparent (alpha = 0) pixels |
 
-* Colors in the list are clickable → clicking one sets it as the Active Color
+* **Left-click** a color in the list → sets it as the Active Color
+* **Right-click** a color in the list → opens the Color Picker Popup to remap all pixels of that color to a new color (one undo step per remap)
 * Colors are sorted by usage % descending by default
 * Hovering a color in the list highlights those pixels on canvas (ghost overlay)
+* Active Color swatch and hex text are both clickable → open Color Picker Popup
+
+---
+
+### 3.3.1 Color Picker Popup
+
+```
+/// <summary>
+/// Custom color picker popup (replaces native <input type="color">).
+/// Figma/Photoshop-style: HSV spectrum + hue bar + hex/RGB inputs.
+/// </summary>
+/// <remarks>
+/// Singleton — one instance shared across all triggers.
+/// Closes on outside click or Escape.
+/// </remarks>
+```
+
+* **Spectrum canvas** — drag crosshair to set saturation (X) and value/brightness (Y)
+* **Hue bar** — drag to set hue
+* **Preview swatch** — live preview of selected color
+* **Hex input** — type or paste hex (with or without `#`); updates spectrum and RGB fields live
+* **RGB inputs** — type R/G/B values 0–255; updates spectrum and hex live
+* **Copy button** — copies current hex to clipboard
+* Opened from:
+  * Active Color swatch (click)
+  * Active Color hex text (click)
+  * Color map row (right-click) → also triggers pixel remap on close
 
 ---
 
@@ -352,16 +380,20 @@ Behavior:
 /// </summary>
 ```
 
-* [ ] User can load a `.png` and see it rendered on canvas
-* [ ] User can paint pixels with the pencil tool
-* [ ] User can erase pixels to transparent
-* [ ] User can pick a color from the canvas with the eyedropper
-* [ ] Auto-detect selects all matching-color pixels and allows bulk repaint
-* [ ] Side panel shows the correct color list, %, and pixel count after every edit
-* [ ] Active color swatch updates immediately on eyedropper use
-* [ ] Undo/Redo works up to 50 steps
-* [ ] Export produces a correct `.png` with transparency intact
-* [ ] Game Color Library section exists in UI and displays a "not loaded" state gracefully
+* [x] User can load a `.png` and see it rendered on canvas
+* [x] User can paint pixels with the pencil tool
+* [x] User can erase pixels to transparent
+* [x] User can pick a color from the canvas with the eyedropper
+* [x] Auto-detect selects all matching-color pixels and allows bulk repaint
+* [x] Side panel shows the correct color list, %, and pixel count after every edit
+* [x] Active color swatch updates immediately on eyedropper use
+* [x] Undo/Redo works up to 50 steps
+* [x] Export produces a correct `.png` with transparency intact
+* [x] Game Color Library section exists in UI and displays a "not loaded" state gracefully
+* [x] Custom color picker popup with HSV spectrum, hex input (paste/type), RGB inputs, copy button
+* [x] Color map right-click remaps all pixels of that color via color picker
+* [x] Toolbar and status bar buttons show tooltips on hover
+* [x] Button tooltips use CSS `data-tooltip` pseudo-element (no JS)
 
 ---
 
