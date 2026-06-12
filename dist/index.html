@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Repaint — Pixel Art Recolor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Press+Start+2P&display=swap" rel="stylesheet" />
+    <script type="module" crossorigin src="./assets/index-DWBxJ6vo.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-DrwTXLoj.css">
+  </head>
+  <body>
+    <div id="app">
+      <!-- Toolbar -->
+      <div id="toolbar" class="toolbar">
+        <div class="toolbar-logo">
+          <span class="logo-text">REPAINT</span>
+        </div>
+        <div class="toolbar-tools">
+          <button class="tool-btn active" data-tool="pencil" title="Pencil (B)">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M11 2L14 5L5 14H2V11L11 2Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+              <path d="M9 4L12 7" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+          </button>
+          <button class="tool-btn" data-tool="eraser" title="Eraser (E)">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <rect x="3" y="7" width="10" height="5" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/>
+              <path d="M7 7L10 4L14 8L11 12" stroke="currentColor" stroke-width="1.5" fill="none"/>
+            </svg>
+          </button>
+          <button class="tool-btn" data-tool="eyedropper" title="Eyedropper (I)">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M10 2L14 6L6 14L2 13L3 9L10 2Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+              <path d="M8 4L12 8" stroke="currentColor" stroke-width="1.5"/>
+              <circle cx="3.5" cy="12.5" r="1.5" stroke="currentColor" stroke-width="1"/>
+            </svg>
+          </button>
+          <button class="tool-btn" data-tool="autoselect" title="Auto Select (W)">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <rect x="2" y="2" width="12" height="12" rx="1" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2 2" fill="none"/>
+              <path d="M6 7L8 9L12 5" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+          </button>
+        </div>
+        <div class="toolbar-separator"></div>
+        <div class="toolbar-brush">
+          <span class="brush-label">SIZE</span>
+          <input type="range" id="brush-size" min="1" max="32" value="1" class="brush-slider" />
+          <span class="brush-value" id="brush-value">1</span>
+        </div>
+        <div class="toolbar-separator"></div>
+        <div class="toolbar-zoom">
+          <span class="brush-label">ZOOM</span>
+          <span class="zoom-value" id="zoom-display">1×</span>
+        </div>
+      </div>
+
+      <!-- Main content: canvas + side panel -->
+      <div id="main-area" class="main-area">
+        <!-- Canvas container -->
+        <div id="canvas-container" class="canvas-container">
+          <canvas id="display-canvas"></canvas>
+          <canvas id="brush-cursor-canvas" class="brush-cursor-canvas"></canvas>
+          <div id="drop-overlay" class="drop-overlay hidden">
+            <div class="drop-message">
+              <span class="drop-icon">⬇</span>
+              <span>Drop PNG to load</span>
+            </div>
+          </div>
+          <div id="empty-state" class="empty-state">
+            <div class="empty-message">
+              <span class="empty-title">NO IMAGE LOADED</span>
+              <span class="empty-sub">Load a PNG to begin editing</span>
+              <button class="btn-primary" id="empty-load-btn">LOAD IMAGE</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Side Panel -->
+        <div id="side-panel" class="side-panel">
+          <!-- Active Color -->
+          <div class="panel-section">
+            <div class="panel-header">ACTIVE COLOR</div>
+            <div id="active-color-display" class="active-color-display">
+              <div class="active-swatch" id="active-swatch"></div>
+              <div class="active-color-info">
+                <span class="color-hex" id="active-hex">#000000</span>
+                <span class="color-rgb" id="active-rgb">R 0  G 0  B 0</span>
+                <span class="color-alpha" id="active-alpha">A 255</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Color List -->
+          <div class="panel-section panel-section-flex">
+            <div class="panel-header">
+              COLORS IN ARTWORK
+              <span class="color-count" id="color-count">—</span>
+            </div>
+            <div id="color-list" class="color-list">
+              <div class="color-list-empty">Load an image to see color stats</div>
+            </div>
+          </div>
+
+          <!-- Game Color Library -->
+          <div class="panel-section">
+            <div class="panel-header">GAME COLOR LIBRARY</div>
+            <div id="game-color-library" class="game-color-library">
+              <div class="library-empty">
+                <span class="library-empty-icon">◈</span>
+                <span>No color library loaded.</span>
+                <span class="library-hint">Add palette to enable.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Status Bar -->
+      <div id="status-bar" class="status-bar">
+        <div class="status-left">
+          <button class="btn-status" id="load-btn">LOAD PNG</button>
+          <button class="btn-status" id="export-btn" disabled>EXPORT PNG</button>
+          <input type="file" id="file-input" accept=".png,image/png" hidden />
+        </div>
+        <div class="status-center">
+          <span class="status-info" id="canvas-size">—</span>
+          <span class="status-info" id="cursor-pos">—</span>
+        </div>
+        <div class="status-right">
+          <button class="btn-status" id="undo-btn" disabled title="Ctrl+Z">UNDO</button>
+          <button class="btn-status" id="redo-btn" disabled title="Ctrl+Y">REDO</button>
+          <button class="btn-status" id="resize-btn" disabled>RESIZE</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resize Dialog -->
+    <div id="resize-dialog" class="dialog-overlay hidden">
+      <div class="dialog">
+        <div class="dialog-header">IMAGE RESIZE</div>
+        <div class="dialog-body">
+          <div class="dialog-row">
+            <label>PRESET</label>
+            <select id="resize-preset">
+              <option value="">Custom</option>
+              <option value="8">8 × 8</option>
+              <option value="16">16 × 16</option>
+              <option value="32">32 × 32</option>
+              <option value="48">48 × 48</option>
+              <option value="64">64 × 64</option>
+              <option value="128">128 × 128</option>
+            </select>
+          </div>
+          <div class="dialog-row">
+            <label>WIDTH</label>
+            <input type="number" id="resize-width" min="1" max="512" />
+            <span class="dialog-unit">px</span>
+          </div>
+          <div class="dialog-row">
+            <label>HEIGHT</label>
+            <input type="number" id="resize-height" min="1" max="512" />
+            <span class="dialog-unit">px</span>
+          </div>
+          <div class="dialog-row">
+            <label>LOCK RATIO</label>
+            <input type="checkbox" id="resize-lock" />
+          </div>
+          <div id="resize-warning" class="dialog-warning hidden">
+            ⚠ Downscaling will reduce detail. Undo to revert.
+          </div>
+        </div>
+        <div class="dialog-footer">
+          <button class="btn-dialog-cancel" id="resize-cancel">CANCEL</button>
+          <button class="btn-dialog-confirm" id="resize-confirm">APPLY</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast-container" class="toast-container"></div>
+
+  </body>
+</html>
