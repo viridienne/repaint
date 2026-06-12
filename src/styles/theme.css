@@ -1,0 +1,60 @@
+:root {
+  /* Base palette — deep blue-black industrial */
+  --bg-deepest: #0d0d1a;
+  --bg-panel:   #111122;
+  --bg-surface: #1a1a2e;
+  --bg-raised:  #1e2040;
+  --bg-hover:   #252548;
+  --bg-active:  #2d2d5a;
+
+  /* Borders */
+  --border-dim:    rgba(255,255,255,0.06);
+  --border-soft:   rgba(255,255,255,0.1);
+  --border-accent: rgba(233, 69, 96, 0.5);
+
+  /* Accent — jewel red */
+  --accent:       #e94560;
+  --accent-dim:   rgba(233, 69, 96, 0.25);
+  --accent-glow:  rgba(233, 69, 96, 0.15);
+
+  /* Text */
+  --text-primary:   #e8e8f0;
+  --text-secondary: #9090b0;
+  --text-dim:       #5a5a78;
+  --text-accent:    #e94560;
+
+  /* Status colors */
+  --warning: #f5a623;
+  --error:   #ff4444;
+  --success: #4ade80;
+
+  /* Fonts */
+  --font-mono: 'JetBrains Mono', 'Cascadia Code', 'Consolas', monospace;
+  --font-pixel: 'Press Start 2P', monospace;
+
+  /* Sizing */
+  --toolbar-h: 44px;
+  --statusbar-h: 36px;
+  --panel-w: 220px;
+  --radius: 2px;
+}
+
+body {
+  background: var(--bg-deepest);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Noise grain texture */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.4;
+}
